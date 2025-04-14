@@ -84,6 +84,26 @@ def procesar_mobiliarios(ruta_mobiliario):
     return df_mobiliario_limpio
 
 
+def procesar_equipos_medicos(ruta_equipos):
+    df_equipos_medicos = pd.read_excel(ruta_equipos, header=1, sheet_name=None)
+
+    dfs = []
+    for unidad_equipo, df_equipo_unidad in df_equipos_medicos.items():
+        df_equipo_unidad = fa.clean_column_names(df_equipo_unidad)
+
+        dfs.append(df_equipo_unidad)
+
+    # Une todas las unidades
+    df_final = pd.concat(dfs).dropna(subset="nombre_equipo")
+    df_final = df_final.fillna("")
+
+    # Limpia las columnas de texto
+    columnas_texto = df_final.drop(columns="piso").columns
+    df_final[columnas_texto] = df_final[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    return df_final
+
+
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
@@ -94,17 +114,25 @@ def main(
     # ---- REPLACE THIS WITH YOUR OWN CODE ----
     logger.info("Processing dataset...")
 
-    # Procesa los mobiliarios
+    # Define rutas input
     ruta_mobiliarios = (
         input_path
         / "MOBILIARIO (ARIEL)/PLANILLA REGISTRO DE INVENTARIO BIENES DE USO 2025 06022025.xlsx"
     )
+    ruta_equipos = (
+        input_path / "EQUIPOS MEDICOS (RODRIGO)/CONSOLIDADO EQ. MEDICOS REVISADO POR RODRIGO.xlsx"
+    )
+
+    # Define rutas output
     output_mobiliarios = output_path / "df_procesada_mobiliarios.csv"
+    output_equipos = output_path / "df_procesada_equipos_medicos.csv"
 
-    # Lee y exporta mobiliarios
+    # Lee y exporta diversos bienes
     df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
-    df_mobiliario.to_csv(output_mobiliarios, index=False)
+    df_equipos = procesar_equipos_medicos(ruta_equipos)
 
+    df_mobiliario.to_csv(output_mobiliarios, index=False)
+    df_equipos.to_csv(output_equipos, index=False)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
 
