@@ -24,7 +24,7 @@ def procesar_mobiliarios(ruta_mobiliario):
 
         # Limpia el nombre de las columnas
         df_unidad_mobiliario_limpio = fa.clean_column_names(mobiliario)
-        df_unidad_mobiliario_limpio["unidad"] = unidad
+        df_unidad_mobiliario_limpio["unidad_hoja"] = unidad
 
         # Cambia de nombre las columnas
         df_unidad_mobiliario_limpio = df_unidad_mobiliario_limpio.rename(
@@ -66,17 +66,17 @@ def procesar_mobiliarios(ruta_mobiliario):
         fa.limpiar_columna_texto
     )
 
-    # Filtra solamente los bienes que son del hospital
-    mask_propiedades_validas = df_mobiliario_limpio["propiedad"].isin(
-        [
-            "DONACION",
-            "FUNCIONARIO(IMPRIMIR ETIQUETA)",
-            "INT",
-            "INT(IMPRIMIR ETIQUETA)",
-            "COMODATO",
-        ]
-    )
-    df_mobiliario_limpio = df_mobiliario_limpio[mask_propiedades_validas].copy()
+    # # Filtra solamente los bienes que son del hospital
+    # mask_propiedades_validas = df_mobiliario_limpio["propiedad"].isin(
+    #     [
+    #         "DONACION",
+    #         "FUNCIONARIO(IMPRIMIR ETIQUETA)",
+    #         "INT",
+    #         "INT(IMPRIMIR ETIQUETA)",
+    #         "COMODATO",
+    #     ]
+    # )
+    # df_mobiliario_limpio = df_mobiliario_limpio[mask_propiedades_validas].copy()
 
     # Indica el tipo de bien
     df_mobiliario_limpio["tipo_bien"] = "MOBILIARIO"
