@@ -108,6 +108,22 @@ def procesar_equipos_medicos(ruta_equipos):
     return df_final
 
 
+def procesar_equipos_industriales(ruta_industriales):
+    df_industriales = pd.read_excel(ruta_industriales)
+
+    # Limpia el nombre de las columnas
+    df_industriales_limpio = fa.clean_column_names(df_industriales)
+    df_industriales_limpio = df_industriales_limpio.fillna("")
+
+    # Limpia las columnas de texto
+    columnas_texto = df_industriales_limpio.drop(columns="piso").columns
+    df_industriales_limpio[columnas_texto] = df_industriales_limpio[columnas_texto].apply(
+        fa.limpiar_columna_texto
+    )
+
+    return df_industriales_limpio
+
+
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
@@ -126,17 +142,24 @@ def main(
     ruta_equipos = (
         input_path / "EQUIPOS MEDICOS (RODRIGO)/CONSOLIDADO EQ. MEDICOS REVISADO POR RODRIGO.xlsx"
     )
+    ruta_industriales = (
+        input_path
+        / "EQUIPOS INDUSTRIALES Y DE OFICINA (ALEJANDRO)/CONSOLIDADO BIENES INDUSTRIALES Y DE OFICINA.xlsx"
+    )
 
     # Define rutas output
     output_mobiliarios = output_path / "df_procesada_mobiliarios.csv"
     output_equipos = output_path / "df_procesada_equipos_medicos.csv"
+    output_industriales = output_path / "df_procesada_industriales.csv"
 
     # Lee y exporta diversos bienes
     df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
+    df_industriales = procesar_equipos_industriales(ruta_industriales)
 
     df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
+    df_industriales.to_csv(output_industriales, index=False)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
 
