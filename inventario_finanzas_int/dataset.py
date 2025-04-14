@@ -90,6 +90,7 @@ def procesar_equipos_medicos(ruta_equipos):
     dfs = []
     for unidad_equipo, df_equipo_unidad in df_equipos_medicos.items():
         df_equipo_unidad = fa.clean_column_names(df_equipo_unidad)
+        df_equipo_unidad["unidad_hoja"] = unidad_equipo
 
         dfs.append(df_equipo_unidad)
 
@@ -100,6 +101,9 @@ def procesar_equipos_medicos(ruta_equipos):
     # Limpia las columnas de texto
     columnas_texto = df_final.drop(columns="piso").columns
     df_final[columnas_texto] = df_final[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    # Agrega el tipo de bien
+    df_final["tipo_bien"] = "EQUIPO MEDICO"
 
     return df_final
 
