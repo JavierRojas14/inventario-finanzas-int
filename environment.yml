@@ -15,7 +15,12 @@ dependencies:
   - pandas
   - scikit-learn
   - ruff
+  - polars
+  - fastexcel
+  - xlrd
+  - openpyxl
+  - pyarrow
   - pip:
-    - python-dotenv
-    - mkdocs
-    - -e .
+      - python-dotenv
+      - mkdocs
+      - -e .
