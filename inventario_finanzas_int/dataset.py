@@ -108,6 +108,15 @@ def procesar_equipos_medicos(ruta_equipos):
     # Agrega el tipo de bien
     df_final["tipo_bien"] = "EQUIPO MEDICO"
 
+    # Renombra las columnas para que sean las mismas que las otras planillas
+    df_final = df_final.rename(
+        columns={
+            "recinto": "ubicacion_unidad",
+            "servicio_clinico": "unidadservicio_clinico",
+            "nombre_equipo": "bien",
+        }
+    )
+
     return df_final
 
 
