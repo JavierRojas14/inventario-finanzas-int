@@ -47,7 +47,7 @@ def procesar_mobiliarios(ruta_mobiliario):
             "ubicacion_unidad",
             "propiedad",
             "observacion",
-            "unidad",
+            "unidad_hoja",
             "piso",
         ]
         df_unidad_mobiliario_limpio = df_unidad_mobiliario_limpio[columnas_interes]
@@ -56,6 +56,9 @@ def procesar_mobiliarios(ruta_mobiliario):
 
     # Une todas las unidades
     df_mobiliario_limpio = pd.concat(dfs)
+
+    # Elimina los registros que NO tengan un nombre del bien
+    df_mobiliario_limpio = df_mobiliario_limpio.dropna(subset="bien")
 
     # Llena los NaNs
     df_mobiliario_limpio = df_mobiliario_limpio.fillna("")
