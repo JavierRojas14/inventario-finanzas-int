@@ -121,19 +121,23 @@ def procesar_equipos_medicos(ruta_equipos):
 
 
 def procesar_equipos_industriales(ruta_industriales):
-    df_industriales = pd.read_excel(ruta_industriales)
+    df = pd.read_excel(ruta_industriales)
 
     # Limpia el nombre de las columnas
-    df_industriales_limpio = fa.clean_column_names(df_industriales)
-    df_industriales_limpio = df_industriales_limpio.fillna("")
+    df = fa.clean_column_names(df)
+    df = df.fillna("")
 
     # Limpia las columnas de texto
-    columnas_texto = df_industriales_limpio.drop(columns="piso").columns
-    df_industriales_limpio[columnas_texto] = df_industriales_limpio[columnas_texto].apply(
-        fa.limpiar_columna_texto
-    )
+    columnas_texto = df.drop(columns="piso").columns
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
 
-    return df_industriales_limpio
+    # Elimina columna innecesaria
+    df = df.drop(columns=["correlativo_asignado"])
+
+    # Renombra columnas
+    df = df.rename(columns={"n_inventario_definiado_2025": "correlativo_antiguo"})
+
+    return df
 
 
 @app.command()
