@@ -132,10 +132,10 @@ def procesar_equipos_industriales(ruta_industriales):
     df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
 
     # Elimina columna innecesaria
-    df = df.drop(columns=["correlativo_asignado"])
+    df = df.drop(columns=["correlativo_asignado", "ano_egreso"])
 
     # Renombra columnas
-    df = df.rename(columns={"n_inventario_definiado_2025": "correlativo_antiguo"})
+    df = df.rename(columns={"n_inventario_definido_2025": "correlativo_antiguo"})
 
     return df
 
