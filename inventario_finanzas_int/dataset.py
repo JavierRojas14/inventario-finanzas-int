@@ -20,6 +20,13 @@ CAMBIOS_UNIDAD_EQUIPOS_MEDICOS = {
     "CIRUGIA TORAX": "CIRUGIA DE TORAX",
 }
 
+CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES = {
+    "SMQ SUR": "MQ 3 SUR",
+    "SMQ NORTE": "MQ 3 NORTE",
+    "UCI UTI 5 NORTE": "UPC 5 NORTE",
+    "KINESIOLOGIA": "MEDICINA FISICA Y REHABILITACION",
+}
+
 
 def procesar_mobiliarios(ruta_mobiliario):
     # Lee todas las hojas de mobiliarios
@@ -154,6 +161,11 @@ def procesar_equipos_industriales(ruta_industriales):
 
     # Agrega el tipo de bien
     df["tipo_bien"] = "EQUIPO INDUSTRIAL"
+
+    # Renombra glosas del servicio
+    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
+        CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES
+    )
 
     return df
 
