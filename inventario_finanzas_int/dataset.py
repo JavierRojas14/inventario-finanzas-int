@@ -10,6 +10,11 @@ from inventario_finanzas_int.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 app = typer.Typer()
 
+CAMBIOS_UNIDAD_MOBILIARIOS = {
+    "MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
+    "LAVORATORIO": "LABORATORIO",
+}
+
 CAMBIOS_UNIDAD_EQUIPOS_MEDICOS = {
     "UPC 5TO NORTE": "UPC 5 NORTE",
     "UTI 4TO SUR": "UTI 4 SUR",
@@ -25,6 +30,7 @@ CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES = {
     "SMQ NORTE": "MQ 3 NORTE",
     "UCI UTI 5 NORTE": "UPC 5 NORTE",
     "KINESIOLOGIA": "MEDICINA FISICA Y REHABILITACION",
+    "4 MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
 }
 
 
@@ -100,6 +106,11 @@ def procesar_mobiliarios(ruta_mobiliario):
 
     # Indica el tipo de bien
     df_mobiliario_limpio["tipo_bien"] = "MOBILIARIO"
+
+    # Limpia las unidades
+    df_mobiliario_limpio["unidadservicio_clinico"] = df_mobiliario_limpio[
+        "unidadservicio_clinico"
+    ].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
 
     return df_mobiliario_limpio
 
