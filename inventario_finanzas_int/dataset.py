@@ -10,6 +10,16 @@ from inventario_finanzas_int.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 app = typer.Typer()
 
+CAMBIOS_UNIDAD_EQUIPOS_MEDICOS = {
+    "UPC 5TO NORTE": "UPC 5 NORTE",
+    "UTI 4TO SUR": "UTI 4 SUR",
+    "MEDICO QUIRURGICO 3RO SUR": "MQ 3 SUR",
+    "MEDICO QUIRURGICO 3RO NORTE": "MQ 3 NORTE",
+    "UTI 3RO NORTE": "UTI 3 NORTE",
+    "UTI 4TO NORTE": "UTI 4 NORTE",
+    "CIRUGIA TORAX": "CIRUGIA DE TORAX",
+}
+
 
 def procesar_mobiliarios(ruta_mobiliario):
     # Lee todas las hojas de mobiliarios
@@ -117,6 +127,11 @@ def procesar_equipos_medicos(ruta_equipos):
         }
     )
 
+    # Cambia glosas del nombre de la unidad
+    df_final["unidadservicio_clinico"] = df_final["unidadservicio_clinico"].replace(
+        CAMBIOS_UNIDAD_EQUIPOS_MEDICOS
+    )
+
     return df_final
 
 
@@ -136,6 +151,9 @@ def procesar_equipos_industriales(ruta_industriales):
 
     # Renombra columnas
     df = df.rename(columns={"n_inventario_definido_2025": "correlativo_antiguo"})
+
+    # Agrega el tipo de bien
+    df["tipo_bien"] = "EQUIPO INDUSTRIAL"
 
     return df
 
