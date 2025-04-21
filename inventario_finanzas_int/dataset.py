@@ -86,29 +86,25 @@ def procesar_mobiliarios(ruta_mobiliario):
         dfs.append(df_unidad_mobiliario_limpio)
 
     # Une todas las unidades
-    df_mobiliario_limpio = pd.concat(dfs)
+    df = pd.concat(dfs)
 
     # Elimina los registros que NO tengan un nombre del bien
-    df_mobiliario_limpio = df_mobiliario_limpio.dropna(subset="bien")
+    df = df.dropna(subset="bien")
 
     # Llena los NaNs
-    df_mobiliario_limpio = df_mobiliario_limpio.fillna("")
+    df = df.fillna("")
 
     # Limpia las columnas de texto
-    columnas_texto = df_mobiliario_limpio.drop(columns="piso").columns
-    df_mobiliario_limpio[columnas_texto] = df_mobiliario_limpio[columnas_texto].apply(
-        fa.limpiar_columna_texto
-    )
+    columnas_texto = df.drop(columns="piso").columns
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
 
     # Indica el tipo de bien
-    df_mobiliario_limpio["tipo_bien"] = "MOBILIARIO"
+    df["tipo_bien"] = "MOBILIARIO"
 
     # Limpia las unidades
-    df_mobiliario_limpio["unidadservicio_clinico"] = df_mobiliario_limpio[
-        "unidadservicio_clinico"
-    ].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
+    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
 
-    return df_mobiliario_limpio
+    return df
 
 
 def procesar_equipos_medicos(ruta_equipos):
