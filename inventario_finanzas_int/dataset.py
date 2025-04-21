@@ -231,10 +231,10 @@ def procesar_equipos_informaticos(ruta_archivo):
             dfs[nombre_hoja] = df_unidad
 
     # Concatena todos los bienes
-    df_concatenado = pd.concat(dfs.values())
+    df = pd.concat(dfs.values())
 
     # Solamente deja las columnas utiles
-    df_concatenado = df_concatenado[
+    df = df[
         [
             "correlativo_antiguo",
             "bien",
@@ -249,9 +249,21 @@ def procesar_equipos_informaticos(ruta_archivo):
     ]
 
     # Agrega el tipo de bien
-    df_concatenado["tipo_bien"] = "INFORMATICO"
+    df["tipo_bien"] = "INFORMATICO"
 
-    return df_concatenado
+    # Limpia columnas de texto
+    columnas_texto = [
+        "correlativo_antiguo",
+        "bien",
+        "marca",
+        "modelo",
+        "unidadservicio_clinico",
+        "ubicacion_unidad",
+        "propiedad",
+    ]
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    return df
 
 
 @app.command()
