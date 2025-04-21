@@ -149,6 +149,8 @@ def procesar_equipos_medicos(ruta_equipos):
             "recinto": "ubicacion_unidad",
             "servicio_clinico": "unidadservicio_clinico",
             "nombre_equipo": "bien",
+            "n_inventario": "correlativo_antiguo",
+            "propio_arriendo_comodato": "propiedad",
         }
     )
 
@@ -156,6 +158,9 @@ def procesar_equipos_medicos(ruta_equipos):
     df_final["unidadservicio_clinico"] = df_final["unidadservicio_clinico"].replace(
         CAMBIOS_UNIDAD_EQUIPOS_MEDICOS
     )
+
+    # Elimina columnas innecesarias
+    df_final = df_final.drop(columns=["n_inventario_2025"])
 
     return df_final
 
