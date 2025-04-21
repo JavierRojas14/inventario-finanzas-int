@@ -190,6 +190,70 @@ def procesar_equipos_industriales(ruta_industriales):
     return df
 
 
+def procesar_equipos_informaticos(ruta_archivo):
+    # Lee el archivo
+    df = pd.read_excel(ruta_archivo, sheet_name=None, header=4)
+
+    dfs = {}
+    for nombre_hoja, df_tipo_equipo in df.items():
+        # Si el equipo NO se tiene que dar de baja
+        if nombre_hoja != "EQUIPOS SIN DATOS":
+
+            # Limpia los nombres de columnas
+            df_unidad = fa.clean_column_names(df_tipo_equipo)
+
+            # Renombra columnas
+            df_unidad = df_unidad.rename(
+                columns={
+                    # Cambio de las columnas codigo correlativos
+                    "cod_int": "correlativo_antiguo",
+                    "cod_institucional": "correlativo_antiguo",
+                    "codint": "correlativo_antiguo",
+                    "codinstitucional": "correlativo_antiguo",
+                    # Cambios de la columna Serie
+                    "n_de_serie": "serie",
+                    "n_serie_enero": "serie",
+                    "nserie": "serie",
+                    # Cambios del servicio
+                    "departamento": "unidadservicio_clinico",
+                    "unidad": "unidadservicio_clinico",
+                    "servicio": "unidadservicio_clinico",
+                    # Cambios de la columna Unidad
+                    "ubicacion": "ubicacion_unidad",
+                    # Cambios de la columna propiedad
+                    "estado_de_propiedad": "propiedad",
+                }
+            )
+            # Agrega el nombre del bien
+            df_unidad["bien"] = nombre_hoja
+
+            # Agrega DataFrame de unidad a todos
+            dfs[nombre_hoja] = df_unidad
+
+    # Concatena todos los bienes
+    df_concatenado = pd.concat(dfs.values())
+
+    # Solamente deja las columnas utiles
+    df_concatenado = df_concatenado[
+        [
+            "correlativo_antiguo",
+            "bien",
+            "marca",
+            "modelo",
+            "serie",
+            "unidadservicio_clinico",
+            "ubicacion_unidad",
+            "propiedad",
+            "piso",
+        ]
+    ]
+
+    # Agrega el tipo de bien
+    df_concatenado["tipo_bien"] = "INFORMATICO"
+
+    return df_concatenado
+
+
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
@@ -212,20 +276,27 @@ def main(
         input_path
         / "EQUIPOS INDUSTRIALES Y DE OFICINA (ALEJANDRO)/CONSOLIDADO BIENES INDUSTRIALES Y DE OFICINA.xlsx"
     )
+    ruta_informaticos = (
+        input_path
+        / "EQUIPOS INFORMATICOS (PAOLA-ANDRES)/CONSOLIDADO INVENTARIO INFORMATICA 17032025 .xlsx"
+    )
 
     # Define rutas output
     output_mobiliarios = output_path / "df_procesada_mobiliarios.csv"
     output_equipos = output_path / "df_procesada_equipos_medicos.csv"
     output_industriales = output_path / "df_procesada_industriales.csv"
+    output_informaticos = output_path / "df_procesada_informaticos.csv"
 
     # Lee y exporta diversos bienes
     df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
     df_industriales = procesar_equipos_industriales(ruta_industriales)
+    df_informaticos = procesar_equipos_informaticos(ruta_informaticos)
 
     df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
     df_industriales.to_csv(output_industriales, index=False)
+    df_informaticos.to_csv(output_informaticos)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
 
