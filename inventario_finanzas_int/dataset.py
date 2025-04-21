@@ -308,7 +308,7 @@ def main(
     df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
     df_industriales.to_csv(output_industriales, index=False)
-    df_informaticos.to_csv(output_informaticos)
+    df_informaticos.to_csv(output_informaticos, index=False)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
 
