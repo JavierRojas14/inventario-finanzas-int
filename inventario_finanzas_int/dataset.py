@@ -263,6 +263,21 @@ def procesar_equipos_informaticos(ruta_archivo):
     ]
     df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
 
+    # Elimina registros sin diversas columnas
+    df = df.dropna(
+        subset=[
+            "correlativo_antiguo",
+            "marca",
+            "modelo",
+            "serie",
+            "unidadservicio_clinico",
+            "ubicacion_unidad",
+            "propiedad",
+            "piso",
+        ],
+        how="all",
+    )
+
     return df
 
 
