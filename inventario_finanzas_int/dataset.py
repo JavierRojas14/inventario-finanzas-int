@@ -130,6 +130,9 @@ def procesar_equipos_medicos(ruta_equipos):
         df_equipo_unidad = fa.clean_column_names(df_equipo_unidad)
         df_equipo_unidad["unidad_hoja"] = unidad_equipo
 
+        # Cambia la hoja donde le ponen "Ubicacion"
+        df_equipo_unidad = df_equipo_unidad.rename(columns={"ubicacion": "recinto"})
+
         dfs.append(df_equipo_unidad)
 
     # Une todas las unidades
