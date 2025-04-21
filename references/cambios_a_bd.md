@@ -5,3 +5,4 @@
   - Todas las demás hojas se modificaron para que los encabezados de tablas empezaran en la fila 5
   - Se agregó una hoja "SONDA PROVEEDOR", que era la que estaba previamente en la hoja "PARLANTES"
   - En la hoja "Escaner Portatil" se elimino los headers combinados
+  - En la hoja de "PARLANTES", "SONDA PROVEEDOR" y "Escaner Portatil", se cambio la columna "Ubicacion" a "Servicio"
