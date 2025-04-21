@@ -183,7 +183,13 @@ def procesar_equipos_industriales(ruta_industriales):
     df = df.drop(columns=["correlativo_asignado", "ano_egreso"])
 
     # Renombra columnas
-    df = df.rename(columns={"n_inventario_definido_2025": "correlativo_antiguo"})
+    df = df.rename(
+        columns={
+            "n_inventario_definido_2025": "correlativo_antiguo",
+            "tipo": "propiedad",
+            "observaciones": "observacion",
+        }
+    )
 
     # Agrega el tipo de bien
     df["tipo_bien"] = "EQUIPO INDUSTRIAL"
