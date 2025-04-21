@@ -104,6 +104,9 @@ def procesar_mobiliarios(ruta_mobiliario):
     # Limpia las unidades
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
 
+    # Elimina columnas innecesarias
+    df = df.drop(columns="tipo")
+
     return df
 
 
