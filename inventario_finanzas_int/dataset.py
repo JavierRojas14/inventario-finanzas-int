@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import typer
 from loguru import logger
@@ -98,18 +99,6 @@ def procesar_mobiliarios(ruta_mobiliario):
     df_mobiliario_limpio[columnas_texto] = df_mobiliario_limpio[columnas_texto].apply(
         fa.limpiar_columna_texto
     )
-
-    # # Filtra solamente los bienes que son del hospital
-    # mask_propiedades_validas = df_mobiliario_limpio["propiedad"].isin(
-    #     [
-    #         "DONACION",
-    #         "FUNCIONARIO(IMPRIMIR ETIQUETA)",
-    #         "INT",
-    #         "INT(IMPRIMIR ETIQUETA)",
-    #         "COMODATO",
-    #     ]
-    # )
-    # df_mobiliario_limpio = df_mobiliario_limpio[mask_propiedades_validas].copy()
 
     # Indica el tipo de bien
     df_mobiliario_limpio["tipo_bien"] = "MOBILIARIO"
