@@ -22,6 +22,12 @@ CAMBIOS_UNIDAD_MOBILIARIOS = {
     "UTI SUR": "UTI 4 SUR",
 }
 
+CAMBIO_PROPIEDAD_MOBILIARIOS = {
+    "FUNCIONARIOS": "FUNCIONARIO",
+    "U DE CHILE": "U. DE CHILE",
+    "EMPRESE EXTERNA": "EMPRESA EXTERNA",
+}
+
 CAMBIOS_UNIDAD_EQUIPOS_MEDICOS = {
     "UPC 5TO NORTE": "UPC 5 NORTE",
     "UTI 4TO SUR": "UTI 4 SUR",
@@ -32,6 +38,10 @@ CAMBIOS_UNIDAD_EQUIPOS_MEDICOS = {
     "CIRUGIA TORAX": "CIRUGIA DE TORAX",
 }
 
+CAMBIOS_PROPIEDAD_EQUIPOS_MEDICOS = {
+    "PROPIO": "INT",
+}
+
 CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES = {
     "SMQ SUR": "MQ 3 SUR",
     "SMQ NORTE": "MQ 3 NORTE",
@@ -39,6 +49,10 @@ CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES = {
     "KINESIOLOGIA": "MEDICINA FISICA Y REHABILITACION",
     "4 MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
     "CONGENITO": "CONGENITOS",
+}
+
+CAMBIO_PROPIEDAD_INDUSTRIALES = {
+    "U CHILE": "U. DE CHILE",
 }
 
 CAMBIOS_UNIDAD_EQUIPOS_INFORMATICOS = {
@@ -140,6 +154,9 @@ def procesar_mobiliarios(ruta_mobiliario):
     # Limpia las unidades
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
 
+    # Limpia la propiedad
+    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_MOBILIARIOS)
+
     # Elimina columnas innecesarias
     df = df.drop(columns="tipo")
 
@@ -186,6 +203,9 @@ def procesar_equipos_medicos(ruta_equipos):
         CAMBIOS_UNIDAD_EQUIPOS_MEDICOS
     )
 
+    # Cambia propiedades
+    df_final["propiedad"] = df_final["propiedad"].replace(CAMBIOS_PROPIEDAD_EQUIPOS_MEDICOS)
+
     # Elimina columnas innecesarias
     df_final = df_final.drop(columns=["n_inventario_2025"])
 
@@ -222,6 +242,9 @@ def procesar_equipos_industriales(ruta_industriales):
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
         CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES
     )
+
+    # Cambia la propiedad
+    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES)
 
     return df
 
