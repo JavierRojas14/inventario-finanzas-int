@@ -209,6 +209,9 @@ def procesar_equipos_medicos(ruta_equipos):
     # Elimina columnas innecesarias
     df_final = df_final.drop(columns=["n_inventario_2025"])
 
+    # Ordena los registros
+    df_final = df_final.sort_values(["piso", "unidadservicio_clinico", "ubicacion_unidad"])
+
     return df_final
 
 
@@ -245,6 +248,9 @@ def procesar_equipos_industriales(ruta_industriales):
 
     # Cambia la propiedad
     df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES)
+
+    # Ordena los registros
+    df = df.sort_values(["piso", "unidadservicio_clinico", "ubicacion_unidad"])
 
     return df
 
