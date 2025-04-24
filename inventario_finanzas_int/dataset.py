@@ -49,6 +49,8 @@ CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES = {
     "KINESIOLOGIA": "MEDICINA FISICA Y REHABILITACION",
     "4 MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
     "CONGENITO": "CONGENITOS",
+    "ECORCADIOGRAFIA": "ECOCARDIOGRAFIA",
+    "RESIDENCIA /GIMNACIO": "RESIDENCIA/GIMNASIO",
 }
 
 CAMBIO_PROPIEDAD_INDUSTRIALES = {
@@ -296,6 +298,11 @@ def procesar_equipos_industriales_nuevos(ruta):
 
     # Cambia el tipo de propiedad
     df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES_NUEVOS)
+
+    # Cambio la unidad
+    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
+        CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES
+    )
 
     return df
 
