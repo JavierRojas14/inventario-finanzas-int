@@ -20,3 +20,4 @@
 - PASILLO Y ENTRE ASCENSOREES 4PI: Se le agrego el servicio "PASILLO Y ENTRE ASCENSORES" al primer registro
 - LAVORATORIO: Se le cambió el servicio de "LAVORATORIO" a "LABORATORIO" al primer registro
 - UMT: Se agregó "UMT" a la ubicación dentro de la unidad
+- RESIDENCIA 7 PISO: Se agrego el piso 7 al primer registro
