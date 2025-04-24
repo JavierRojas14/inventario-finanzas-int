@@ -103,21 +103,21 @@ CAMBIOS_UNIDAD_EQUIPOS_INFORMATICOS = {
 
 def procesar_mobiliarios(ruta_mobiliario):
     # Lee todas las hojas de mobiliarios
-    df_mobiliario = pd.read_excel(ruta_mobiliario, sheet_name=None)
+    df = pd.read_excel(ruta_mobiliario, sheet_name=None)
 
     # Procede a leer todas las hojas del Excel
     dfs = []
-    for unidad, mobiliario in df_mobiliario.items():
+    for unidad, mobiliario in df.items():
         if unidad == "Esterilizacion":
             mobiliario.columns = mobiliario.iloc[3]
             mobiliario = mobiliario[4:]
 
         # Limpia el nombre de las columnas
-        df_unidad_mobiliario_limpio = fa.clean_column_names(mobiliario)
-        df_unidad_mobiliario_limpio["unidad_hoja"] = unidad
+        df_unidad = fa.clean_column_names(mobiliario)
+        df_unidad["unidad_hoja"] = unidad
 
         # Cambia de nombre las columnas
-        df_unidad_mobiliario_limpio = df_unidad_mobiliario_limpio.rename(
+        df_unidad = df_unidad.rename(
             columns={
                 "correlativo_asignado": "correlativo_antiguo",
                 "observaciones": "observacion",
@@ -140,15 +140,19 @@ def procesar_mobiliarios(ruta_mobiliario):
             "unidad_hoja",
             "piso",
         ]
-        df_unidad_mobiliario_limpio = df_unidad_mobiliario_limpio[columnas_interes]
+        df_unidad = df_unidad[columnas_interes]
 
-        dfs.append(df_unidad_mobiliario_limpio)
+        # Elimina registros sin bien
+        df_unidad = df_unidad.dropna(subset=["bien"])
+
+        # Extiende los registros del servicio y unidad
+        df_unidad["unidadservicio_clinico"] = df_unidad["unidadservicio_clinico"].ffill()
+        df_unidad["ubicacion_unidad"] = df_unidad["ubicacion_unidad"].ffill()
+
+        dfs.append(df_unidad)
 
     # Une todas las unidades
     df = pd.concat(dfs)
-
-    # Elimina los registros que NO tengan un nombre del bien
-    df = df.dropna(subset="bien")
 
     # Llena los NaNs
     df = df.fillna("")
