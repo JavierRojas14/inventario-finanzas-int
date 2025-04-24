@@ -20,6 +20,7 @@ CAMBIOS_UNIDAD_MOBILIARIOS = {
     "UPC": "RESIDENCIA 7 PISO",
     "UTI NORTE": "UTI 4 NORTE",
     "UTI SUR": "UTI 4 SUR",
+    "UTIM NORTE": "UTIM 4 NORTE",
 }
 
 CAMBIO_PROPIEDAD_MOBILIARIOS = {
@@ -169,6 +170,17 @@ def procesar_mobiliarios(ruta_mobiliario):
     df = df.drop(columns="tipo")
 
     return df
+
+
+def procesar_mobiliario_consolidado(ruta):
+    # Lee archivo
+    df = pd.read_excel(ruta)
+
+    # Limpia el nombre de las columnas
+    df = fa.clean_column_names(df)
+
+    # Limpia columnas de texto
+    columnas_texto = df.drop(columns="piso").columns
 
 
 def procesar_equipos_medicos(ruta_equipos):
