@@ -145,9 +145,10 @@ def procesar_mobiliarios(ruta_mobiliario):
         # Elimina registros sin bien
         df_unidad = df_unidad.dropna(subset=["bien"])
 
-        # Extiende los registros del servicio y unidad
+        # Extiende los registros del servicio, unidad y piso
         df_unidad["unidadservicio_clinico"] = df_unidad["unidadservicio_clinico"].ffill()
         df_unidad["ubicacion_unidad"] = df_unidad["ubicacion_unidad"].ffill()
+        df_unidad["piso"] = df_unidad["piso"].ffill()
 
         dfs.append(df_unidad)
 
