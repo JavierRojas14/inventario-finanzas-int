@@ -55,6 +55,12 @@ CAMBIO_PROPIEDAD_INDUSTRIALES = {
     "U CHILE": "U. DE CHILE",
 }
 
+CAMBIO_PROPIEDAD_INDUSTRIALES_NUEVOS = {
+    "FUNCIONARIOS": "FUNCIONARIO",
+    "FUNCIOINARIOS": "FUNCIONARIO",
+    "FUNCIONARIOS EXTERNOS": "FUNCIONARIO EXTERNO",
+}
+
 CAMBIOS_UNIDAD_EQUIPOS_INFORMATICOS = {
     "ALIVIO DEL DOLOR Y CUIDADOS PALIATIVOS": "CUIDADOS PALIATIVOS",
     "CUIDADOS PALEATIVOS": "CUIDADOS PALIATIVOS",
@@ -255,6 +261,45 @@ def procesar_equipos_industriales(ruta_industriales):
     return df
 
 
+def procesar_equipos_industriales_nuevos(ruta):
+    # Lee el archivo
+    df = pd.read_excel(ruta)
+
+    # Limpia las columnas
+    df = fa.clean_column_names(df)
+
+    # Limpia columnas de texto
+    columnas_texto = [
+        "bien",
+        "marca",
+        "tipo",
+        "unidadservicio_clinico",
+        "ubicacion_unidad",
+        "observaciones",
+    ]
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    # Elimina columna innecesaria
+    df = df.drop(columns=["correlativo_asignado", "ano_egreso", "vida_util"])
+
+    # Renombra columnas
+    df = df.rename(
+        columns={
+            "n_inventario_definido_2025": "correlativo_antiguo",
+            "tipo": "propiedad",
+            "observaciones": "observacion",
+        }
+    )
+
+    # Agrega el tipo de bien
+    df["tipo_bien"] = "EQUIPO INDUSTRIAL"
+
+    # Cambia el tipo de propiedad
+    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES_NUEVOS)
+
+    return df
+
+
 def procesar_equipos_informaticos(ruta_archivo):
     # Lee el archivo
     df = pd.read_excel(ruta_archivo, sheet_name=None, header=4)
@@ -373,6 +418,10 @@ def main(
         input_path
         / "EQUIPOS INDUSTRIALES Y DE OFICINA (ALEJANDRO)/CONSOLIDADO BIENES INDUSTRIALES Y DE OFICINA.xlsx"
     )
+    ruta_industriales_nuevo = (
+        input_path
+        / "EQUIPOS INDUSTRIALES Y DE OFICINA (ALEJANDRO)/PLANILLA REGISTRO DE INVENTARIO BIENES DE USO 2025.xlsx"
+    )
     ruta_informaticos = (
         input_path
         / "EQUIPOS INFORMATICOS (PAOLA-ANDRES)/CONSOLIDADO INVENTARIO INFORMATICA 17032025 .xlsx"
@@ -382,17 +431,20 @@ def main(
     output_mobiliarios = output_path / "df_procesada_mobiliarios.csv"
     output_equipos = output_path / "df_procesada_equipos_medicos.csv"
     output_industriales = output_path / "df_procesada_industriales.csv"
+    output_industriales_nuevos = output_path / "df_procesada_industriales.csv"
     output_informaticos = output_path / "df_procesada_informaticos.csv"
 
     # Lee y exporta diversos bienes
     df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
-    df_industriales = procesar_equipos_industriales(ruta_industriales)
+    # df_industriales = procesar_equipos_industriales(ruta_industriales)
+    df_industriales_nuevos = procesar_equipos_industriales_nuevos(ruta_industriales_nuevo)
     df_informaticos = procesar_equipos_informaticos(ruta_informaticos)
 
     df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
-    df_industriales.to_csv(output_industriales, index=False)
+    # df_industriales.to_csv(output_industriales, index=False)
+    df_industriales_nuevos.to_csv(output_industriales_nuevos, index=False)
     df_informaticos.to_csv(output_informaticos, index=False)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
