@@ -1,4 +1,8 @@
 import pandas as pd
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
 
 def clean_column_names(df):
@@ -42,3 +46,54 @@ def limpiar_columna_texto(serie):
         .str.encode("ascii", "ignore")
         .str.decode("utf-8")
     )
+
+
+def guardar_dataframe_como_tabla_excel(
+    df: pd.DataFrame,
+    ruta_archivo: str,
+    nombre_tabla: str = "Tabla1",
+    estilo_tabla: str = "TableStyleMedium9",
+) -> None:
+    """
+    Guarda un DataFrame de pandas en un archivo Excel como una tabla formal (no solo como
+    rango de celdas).
+
+    Parámetros:
+        df (pd.DataFrame): DataFrame que quieres exportar.
+        ruta_archivo (str): Ruta donde se guardará el archivo Excel.
+        nombre_tabla (str): Nombre de la tabla en Excel (debe ser único y sin espacios).
+        estilo_tabla (str): Estilo visual de la tabla en Excel. Por defecto "TableStyleMedium9".
+    """
+    # Crear un nuevo libro y seleccionar la hoja activa
+    wb = Workbook()
+    ws = wb.active
+
+    # Escribir el DataFrame en la hoja
+    for r in dataframe_to_rows(df, index=False, header=True):
+        ws.append(r)
+
+    # Calcular el rango de la tabla
+    max_col = get_column_letter(df.shape[1])
+    max_row = df.shape[0] + 1  # +1 para la cabecera
+    rango_tabla = f"A1:{max_col}{max_row}"
+
+    # Crear la tabla
+    tabla = Table(displayName=nombre_tabla, ref=rango_tabla)
+
+    # Aplicar estilo
+    estilo = TableStyleInfo(
+        name=estilo_tabla,
+        showFirstColumn=False,
+        showLastColumn=False,
+        showRowStripes=True,
+        showColumnStripes=False,
+    )
+    tabla.tableStyleInfo = estilo
+
+    # Agregar la tabla a la hoja
+    ws.add_table(tabla)
+
+    # Guardar el archivo
+    wb.save(ruta_archivo)
+
+    print(f"✅ Archivo guardado exitosamente en: {ruta_archivo}")
