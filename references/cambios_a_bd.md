@@ -27,3 +27,7 @@
 # Equipos Industriales
 
 - Todos los registros que tenian "FARMACIA HOSPITALIZADO" como unidad/servicio, se les cambio la unidad a "UNIDAD DE APOYO FARMACIA" y la ubicacion dentro de la unidad se le concateno el texto "FARMACIA HOSPITALIZADO -" (Ej: OFICINA QUIMICOS > FARMACIA HOSPITALIZADO - OFICINA QUIMICOS)
+
+# Equipos Medicos
+
+- Se agregaron 4 registros de luminometros (segun correo) a una nueva hoja de IAAS.
