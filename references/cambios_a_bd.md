@@ -23,3 +23,7 @@
 - Fisiopatologia: Se agrego el piso 2 en el primer registro
 - RESIDENCIA 7 PISO: Se agrego el piso 7 al primer registro
 - Admision: Se agrego el piso 1 al primer registro
+
+# Equipos Industriales
+
+- Todos los registros que tenian "FARMACIA HOSPITALIZADO" como unidad/servicio, se les cambio la unidad a "UNIDAD DE APOYO FARMACIA" y la ubicacion dentro de la unidad se le concateno el texto "FARMACIA HOSPITALIZADO -" (Ej: OFICINA QUIMICOS > FARMACIA HOSPITALIZADO - OFICINA QUIMICOS)
