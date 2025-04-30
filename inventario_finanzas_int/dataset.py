@@ -424,6 +424,40 @@ def procesar_equipos_informaticos(ruta_archivo):
     return df
 
 
+def procesar_equipos_informaticos_nuevos(ruta):
+    # Lee los archivos
+    df = pd.read_excel(ruta)
+
+    # Limpia los nombres de las columnas
+    df = fa.clean_column_names(df)
+
+    # Elimina registros sin bien
+    df = df.dropna(subset=["bien"])
+
+    # Limpia columnas de texto
+    columnas_texto = [
+        "bien",
+        "marca",
+        "unidadservicio_clinico",
+        "ubicacion_unidad",
+        "observaciones",
+        "propiedad",
+    ]
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    # Renombra columnas
+    df = df.rename(
+        columns={
+            "cod_int": "correlativo_antiguo",
+        }
+    )
+
+    # Agrega el tipo de bien
+    df["tipo_bien"] = "INFORMATICO"
+
+    return df
+
+
 @app.command()
 def main(
     # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
@@ -454,6 +488,9 @@ def main(
         input_path
         / "EQUIPOS INFORMATICOS (PAOLA-ANDRES)/CONSOLIDADO INVENTARIO INFORMATICA 17032025 .xlsx"
     )
+    ruta_informaticos_nuevo = (
+        input_path / "EQUIPOS INFORMATICOS FORMATO NUEVO/Consolidado Informatica nuevo formato.xlsx"
+    )
 
     # Define rutas output
     output_mobiliarios = output_path / "df_procesada_mobiliarios.csv"
@@ -461,19 +498,22 @@ def main(
     output_industriales = output_path / "df_procesada_industriales.csv"
     output_industriales_nuevos = output_path / "df_procesada_industriales.csv"
     output_informaticos = output_path / "df_procesada_informaticos.csv"
+    output_informaticos_nuevo = output_path / "df_procesada_informaticos.csv"
 
     # Lee y exporta diversos bienes
     df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
     # df_industriales = procesar_equipos_industriales(ruta_industriales)
     df_industriales_nuevos = procesar_equipos_industriales_nuevos(ruta_industriales_nuevo)
-    df_informaticos = procesar_equipos_informaticos(ruta_informaticos)
+    # df_informaticos = procesar_equipos_informaticos(ruta_informaticos)
+    df_informaticos_nuevos = procesar_equipos_informaticos_nuevos(ruta_informaticos_nuevo)
 
     df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
     # df_industriales.to_csv(output_industriales, index=False)
     df_industriales_nuevos.to_csv(output_industriales_nuevos, index=False)
-    df_informaticos.to_csv(output_informaticos, index=False)
+    # df_informaticos.to_csv(output_informaticos, index=False)
+    df_informaticos_nuevos.to_csv(output_informaticos_nuevo, index=False)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
 
