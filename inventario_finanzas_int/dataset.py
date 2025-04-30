@@ -244,46 +244,6 @@ def procesar_equipos_medicos(ruta_equipos):
     return df_final
 
 
-def procesar_equipos_industriales(ruta_industriales):
-    df = pd.read_excel(ruta_industriales)
-
-    # Limpia el nombre de las columnas
-    df = fa.clean_column_names(df)
-    df = df.fillna("")
-
-    # Limpia las columnas de texto
-    columnas_texto = df.drop(columns="piso").columns
-    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
-
-    # Elimina columna innecesaria
-    df = df.drop(columns=["correlativo_asignado", "ano_egreso"])
-
-    # Renombra columnas
-    df = df.rename(
-        columns={
-            "n_inventario_definido_2025": "correlativo_antiguo",
-            "tipo": "propiedad",
-            "observaciones": "observacion",
-        }
-    )
-
-    # Agrega el tipo de bien
-    df["tipo_bien"] = "EQUIPO INDUSTRIAL"
-
-    # Renombra glosas del servicio
-    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
-        CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES
-    )
-
-    # Cambia la propiedad
-    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES)
-
-    # Ordena los registros
-    df = df.sort_values(["piso", "unidadservicio_clinico", "ubicacion_unidad"])
-
-    return df
-
-
 def procesar_equipos_industriales_nuevos(ruta):
     # Lee el archivo
     df = pd.read_excel(ruta)
@@ -323,102 +283,6 @@ def procesar_equipos_industriales_nuevos(ruta):
     # Cambio la unidad
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
         CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES
-    )
-
-    return df
-
-
-def procesar_equipos_informaticos(ruta_archivo):
-    # Lee el archivo
-    df = pd.read_excel(ruta_archivo, sheet_name=None, header=4)
-
-    dfs = {}
-    for nombre_hoja, df_tipo_equipo in df.items():
-        # Si el equipo NO se tiene que dar de baja
-        if nombre_hoja != "EQUIPOS SIN DATOS":
-
-            # Limpia los nombres de columnas
-            df_unidad = fa.clean_column_names(df_tipo_equipo)
-
-            # Renombra columnas
-            df_unidad = df_unidad.rename(
-                columns={
-                    # Cambio de las columnas codigo correlativos
-                    "cod_int": "correlativo_antiguo",
-                    "cod_institucional": "correlativo_antiguo",
-                    "codint": "correlativo_antiguo",
-                    "codinstitucional": "correlativo_antiguo",
-                    # Cambios de la columna Serie
-                    "n_de_serie": "serie",
-                    "n_serie_enero": "serie",
-                    "nserie": "serie",
-                    # Cambios del servicio
-                    "departamento": "unidadservicio_clinico",
-                    "unidad": "unidadservicio_clinico",
-                    "servicio": "unidadservicio_clinico",
-                    # Cambios de la columna Unidad
-                    "ubicacion": "ubicacion_unidad",
-                    # Cambios de la columna propiedad
-                    "estado_de_propiedad": "propiedad",
-                }
-            )
-            # Agrega el nombre del bien
-            df_unidad["bien"] = nombre_hoja
-
-            # Agrega DataFrame de unidad a todos
-            dfs[nombre_hoja] = df_unidad
-
-    # Concatena todos los bienes
-    df = pd.concat(dfs.values())
-
-    # Solamente deja las columnas utiles
-    df = df[
-        [
-            "correlativo_antiguo",
-            "bien",
-            "marca",
-            "modelo",
-            "serie",
-            "unidadservicio_clinico",
-            "ubicacion_unidad",
-            "propiedad",
-            "piso",
-        ]
-    ]
-
-    # Agrega el tipo de bien
-    df["tipo_bien"] = "INFORMATICO"
-
-    # Limpia columnas de texto
-    columnas_texto = [
-        "correlativo_antiguo",
-        "bien",
-        "marca",
-        "modelo",
-        "unidadservicio_clinico",
-        "ubicacion_unidad",
-        "propiedad",
-    ]
-    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
-
-    # Elimina registros sin diversas columnas
-    df = df.dropna(
-        subset=[
-            "correlativo_antiguo",
-            "marca",
-            "modelo",
-            "serie",
-            "unidadservicio_clinico",
-            "ubicacion_unidad",
-            "propiedad",
-            "piso",
-        ],
-        how="all",
-    )
-
-    # Cambia glosas del servicio
-    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
-        CAMBIOS_UNIDAD_EQUIPOS_INFORMATICOS
     )
 
     return df
@@ -476,17 +340,9 @@ def main(
     ruta_equipos = (
         input_path / "EQUIPOS MEDICOS (RODRIGO)/CONSOLIDADO EQ. MEDICOS REVISADO POR RODRIGO.xlsx"
     )
-    ruta_industriales = (
-        input_path
-        / "EQUIPOS INDUSTRIALES Y DE OFICINA (ALEJANDRO)/CONSOLIDADO BIENES INDUSTRIALES Y DE OFICINA.xlsx"
-    )
     ruta_industriales_nuevo = (
         input_path
         / "EQUIPOS INDUSTRIALES Y DE OFICINA (ALEJANDRO)/PLANILLA REGISTRO DE INVENTARIO BIENES DE USO 2025.xlsx"
-    )
-    ruta_informaticos = (
-        input_path
-        / "EQUIPOS INFORMATICOS (PAOLA-ANDRES)/CONSOLIDADO INVENTARIO INFORMATICA 17032025 .xlsx"
     )
     ruta_informaticos_nuevo = (
         input_path / "EQUIPOS INFORMATICOS FORMATO NUEVO/Consolidado Informatica nuevo formato.xlsx"
@@ -495,24 +351,18 @@ def main(
     # Define rutas output
     output_mobiliarios = output_path / "df_procesada_mobiliarios.csv"
     output_equipos = output_path / "df_procesada_equipos_medicos.csv"
-    output_industriales = output_path / "df_procesada_industriales.csv"
     output_industriales_nuevos = output_path / "df_procesada_industriales.csv"
-    output_informaticos = output_path / "df_procesada_informaticos.csv"
     output_informaticos_nuevo = output_path / "df_procesada_informaticos.csv"
 
     # Lee y exporta diversos bienes
     df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
-    # df_industriales = procesar_equipos_industriales(ruta_industriales)
     df_industriales_nuevos = procesar_equipos_industriales_nuevos(ruta_industriales_nuevo)
-    # df_informaticos = procesar_equipos_informaticos(ruta_informaticos)
     df_informaticos_nuevos = procesar_equipos_informaticos_nuevos(ruta_informaticos_nuevo)
 
     df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
-    # df_industriales.to_csv(output_industriales, index=False)
     df_industriales_nuevos.to_csv(output_industriales_nuevos, index=False)
-    # df_informaticos.to_csv(output_informaticos, index=False)
     df_informaticos_nuevos.to_csv(output_informaticos_nuevo, index=False)
     logger.success("Processing dataset complete.")
     # -----------------------------------------
