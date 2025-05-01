@@ -12,15 +12,15 @@ from inventario_finanzas_int.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 app = typer.Typer()
 
 CAMBIOS_UNIDAD_MOBILIARIOS = {
-    "MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
-    "LAVORATORIO": "LABORATORIO",
-    "ALIVIO DEL DOLOR-PALIATIVO": "CUIDADOS PALIATIVOS",
-    "FARMACIA HOPITALIZADOS": "FARMACIA HOSPITALIZADO",
-    "UCI 5 NORTE": "UPC 5 NORTE",
-    "UPC": "RESIDENCIA 7 PISO",
-    "UTI NORTE": "UTI 4 NORTE",
-    "UTI SUR": "UTI 4 SUR",
-    "UTIM NORTE": "UTIM 4 NORTE",
+    # "MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
+    # "LAVORATORIO": "LABORATORIO",
+    "ALIVIO DEL DOLOR-PALIATIVOS": "CUIDADOS PALIATIVOS",
+    # "FARMACIA HOPITALIZADOS": "FARMACIA HOSPITALIZADO",
+    # "UCI 5 NORTE": "UPC 5 NORTE",
+    # "UPC": "RESIDENCIA 7 PISO",
+    # "UTI NORTE": "UTI 4 NORTE",
+    # "UTI SUR": "UTI 4 SUR",
+    # "UTIM NORTE": "UTIM 4 NORTE",
 }
 
 CAMBIO_PROPIEDAD_MOBILIARIOS = {
@@ -117,6 +117,12 @@ def procesar_mobiliario(ruta):
         "observaciones",
     ]
     df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    # Renombra propiedades
+    # df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_MOBILIARIOS)
+
+    # Renombra unidades
+    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
 
     return df
 
