@@ -14,7 +14,7 @@ app = typer.Typer()
 CAMBIOS_UNIDAD_MOBILIARIOS = {
     "MQ CARDIOVASCULAR": "MQ 4 CARDIOVASCULAR",
     "LAVORATORIO": "LABORATORIO",
-    "ALIVIO DEL DOLOR- CUIDADOR PALIATIVOS": "CUIDADOS PALIATIVOS",
+    "ALIVIO DEL DOLOR-PALIATIVO": "CUIDADOS PALIATIVOS",
     "FARMACIA HOPITALIZADOS": "FARMACIA HOSPITALIZADO",
     "UCI 5 NORTE": "UPC 5 NORTE",
     "UPC": "RESIDENCIA 7 PISO",
@@ -105,6 +105,18 @@ def procesar_mobiliario(ruta):
 
     # Elimina la columna del numero de inventario asignado
     df = df.drop(columns=["numero_inventario"])
+
+    # Limpia columnas de texto
+    columnas_texto = [
+        "bien",
+        "marca",
+        "tipo_bien",
+        "unidadservicio_clinico",
+        "ubicacion_unidad",
+        "propiedad",
+        "observaciones",
+    ]
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
 
     return df
 
