@@ -56,7 +56,7 @@ CAMBIOS_UNIDAD_EQUIPOS_INDUSTRIALES = {
     "RESIDENCIA /GIMNACIO": "RESIDENCIA/GIMNASIO",
 }
 
-CAMBIO_PROPIEDAD_INDUSTRIALES_NUEVOS = {
+CAMBIO_PROPIEDAD_INDUSTRIALES = {
     "FUNCIONARIOS": "FUNCIONARIO",
     "FUNCIOINARIOS": "FUNCIONARIO",
     "FUNCIONARIOS EXTERNOS": "FUNCIONARIO EXTERNO",
@@ -238,7 +238,7 @@ def procesar_equipos_industriales_nuevos(ruta):
     df["tipo_bien"] = "EQUIPO INDUSTRIAL"
 
     # Cambia el tipo de propiedad
-    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES_NUEVOS)
+    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_INDUSTRIALES)
 
     # Cambio la unidad
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(
