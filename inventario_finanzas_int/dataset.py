@@ -96,6 +96,17 @@ def procesar_mobiliario(ruta):
     # Agrgea el tipo de bien
     df["tipo_bien"] = "MOBILIARIO"
 
+    # Agrega el int del inventario asignado
+    df["numero_inventario"] = (
+        df["n_inventario_2025"].str.split("-").str[-1].str.lstrip("0").astype("Int32")
+    )
+
+    # Ordena la base segun el numero del inventario
+    df = df.sort_values("numero_inventario")
+
+    # Elimina la columna del numero de inventario asignado
+    df = df.drop(columns=["numero_inventario"])
+
     return df
 
 
