@@ -65,15 +65,40 @@ CAMBIO_PROPIEDAD_INDUSTRIALES = {
 }
 
 
-def procesar_mobiliario_consolidado(ruta):
+def procesar_mobiliario(ruta):
     # Lee archivo
     df = pd.read_excel(ruta)
 
     # Limpia el nombre de las columnas
     df = fa.clean_column_names(df)
 
+    # Elimina columnas innecesarias
+    df = df.drop(columns=["correlativo_2025", "oc", "n_factura", "ingreso"])
+
+    # Elimina registros sin bien
+    df = df.dropna(subset=["bien"])
+
     # Limpia columnas de texto
-    columnas_texto = df.drop(columns="piso").columns
+    columnas_texto = [
+        "bien",
+        "marca",
+        "unidadservicio_clinico",
+        "ubicacion_unidad",
+        "propiedad",
+        "observaciones",
+    ]
+    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
+
+    # Agrgea el tipo de bien
+    df["tipo_bien"] = "MOBILIARIO"
+
+    # Agrega el piso
+    df["piso"] = np.nan
+
+    # Agrega el correlativo antiguo
+    df["correlativo_antiguo"] = np.nan
+
+    return df
 
 
 def procesar_equipos_medicos(ruta_equipos):
@@ -217,10 +242,7 @@ def main(
     logger.info("Processing dataset...")
 
     # Define rutas input
-    ruta_mobiliarios = (
-        input_path
-        / "MOBILIARIO (ARIEL)/PLANILLA REGISTRO DE INVENTARIO BIENES DE USO 2025 06022025.xlsx"
-    )
+    ruta_mobiliarios = input_path / "MOBILIARIO (ARIEL)/MATRIZ CORRELATIVA AÑO 2025.xlsx"
     ruta_equipos = (
         input_path / "EQUIPOS MEDICOS (RODRIGO)/CONSOLIDADO EQ. MEDICOS REVISADO POR RODRIGO.xlsx"
     )
@@ -239,12 +261,12 @@ def main(
     output_informaticos_nuevo = output_path / "df_procesada_informaticos.csv"
 
     # Lee y exporta diversos bienes
-    # df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
+    df_mobiliario = procesar_mobiliario(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
     df_industriales_nuevos = procesar_equipos_industriales_nuevos(ruta_industriales_nuevo)
     df_informaticos_nuevos = procesar_equipos_informaticos_nuevos(ruta_informaticos_nuevo)
 
-    # df_mobiliario.to_csv(output_mobiliarios, index=False)
+    df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
     df_industriales_nuevos.to_csv(output_industriales_nuevos, index=False)
     df_informaticos_nuevos.to_csv(output_informaticos_nuevo, index=False)
