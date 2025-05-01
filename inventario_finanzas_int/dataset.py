@@ -82,6 +82,7 @@ def procesar_mobiliario(ruta):
 
     # Elimina columnas innecesarias
     df = df.drop(columns=["ano_egreso", "unnamed_13", "unnamed_14", "unnamed_12"])
+
     # Elimina registros sin bien
     df = df.dropna(subset=["bien"])
 
@@ -90,11 +91,9 @@ def procesar_mobiliario(ruta):
         columns={
             "correlativo_asignado": "correlativo_antiguo",
             "n_inventario_definido_2025": "n_inventario_2025",
+            "tipo": "tipo_bien",
         }
     )
-
-    # Agrgea el tipo de bien
-    df["tipo_bien"] = "MOBILIARIO"
 
     # Agrega el int del inventario asignado
     df["numero_inventario"] = (
