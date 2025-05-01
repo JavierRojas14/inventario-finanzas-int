@@ -66,37 +66,35 @@ CAMBIO_PROPIEDAD_INDUSTRIALES = {
 
 
 def procesar_mobiliario(ruta):
-    # Lee archivo
-    df = pd.read_excel(ruta)
+    # Define los archivos en la carpeta
+    archivos = ruta.glob("*.xlsx")
+
+    dfs = []
+    for ruta_unidad in archivos:
+        df = pd.read_excel(ruta_unidad)
+        dfs.append(df)
+
+    # Concatena todas las unidades
+    df = pd.concat(dfs)
 
     # Limpia el nombre de las columnas
     df = fa.clean_column_names(df)
 
     # Elimina columnas innecesarias
-    df = df.drop(columns=["correlativo_2025", "oc", "n_factura", "ingreso"])
-
+    df = df.drop(columns=["ano_egreso", "unnamed_13", "unnamed_14", "unnamed_12"])
     # Elimina registros sin bien
     df = df.dropna(subset=["bien"])
 
-    # Limpia columnas de texto
-    columnas_texto = [
-        "bien",
-        "marca",
-        "unidadservicio_clinico",
-        "ubicacion_unidad",
-        "propiedad",
-        "observaciones",
-    ]
-    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
+    # Renombra columnas
+    df = df.rename(
+        columns={
+            "correlativo_asignado": "correlativo_antiguo",
+            "n_inventario_definido_2025": "n_inventario_2025",
+        }
+    )
 
     # Agrgea el tipo de bien
     df["tipo_bien"] = "MOBILIARIO"
-
-    # Agrega el piso
-    df["piso"] = np.nan
-
-    # Agrega el correlativo antiguo
-    df["correlativo_antiguo"] = np.nan
 
     return df
 
@@ -242,7 +240,7 @@ def main(
     logger.info("Processing dataset...")
 
     # Define rutas input
-    ruta_mobiliarios = input_path / "MOBILIARIO (ARIEL)/MATRIZ CORRELATIVA AÑO 2025.xlsx"
+    ruta_mobiliarios = input_path / "MOBILIARIO (ARIEL)/BASE DE ETIQUETAS/"
     ruta_equipos = (
         input_path / "EQUIPOS MEDICOS (RODRIGO)/CONSOLIDADO EQ. MEDICOS REVISADO POR RODRIGO.xlsx"
     )
