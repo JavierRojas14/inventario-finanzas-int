@@ -12,3 +12,7 @@ Ocupa las bases de etiquetas. Agrega 2 correlativo:
 # Equipos Medicos
 
 - Se agregaron 4 registros de luminometros (segun correo) a una nueva hoja de IAAS.
+
+# Informaticos
+
+- Todos los registros que tenian "INMUNOLOGIA" o "MICROBIOLOGIA" como unidad/servicio, se les cambio la unidad a "LABORATORIO" y la ubicacion dentro de la unidad se le concateno el texto previo en la unidad.
