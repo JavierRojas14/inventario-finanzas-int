@@ -65,82 +65,6 @@ CAMBIO_PROPIEDAD_INDUSTRIALES = {
 }
 
 
-def procesar_mobiliarios(ruta_mobiliario):
-    # Lee todas las hojas de mobiliarios
-    df = pd.read_excel(ruta_mobiliario, sheet_name=None)
-
-    # Procede a leer todas las hojas del Excel
-    dfs = []
-    for unidad, mobiliario in df.items():
-        if unidad == "Esterilizacion":
-            mobiliario.columns = mobiliario.iloc[3]
-            mobiliario = mobiliario[4:]
-
-        # Limpia el nombre de las columnas
-        df_unidad = fa.clean_column_names(mobiliario)
-        df_unidad["unidad_hoja"] = unidad
-
-        # Cambia de nombre las columnas
-        df_unidad = df_unidad.rename(
-            columns={
-                "correlativo_asignado": "correlativo_antiguo",
-                "observaciones": "observacion",
-                "correlativo_2025": "correlativo_antiguo",
-            }
-        )
-
-        # Deja solamente las columnas de interes
-        columnas_interes = [
-            "correlativo_antiguo",
-            "bien",
-            "marca",
-            "modelo",
-            "serie",
-            "tipo",
-            "unidadservicio_clinico",
-            "ubicacion_unidad",
-            "propiedad",
-            "observacion",
-            "unidad_hoja",
-            "piso",
-        ]
-        df_unidad = df_unidad[columnas_interes]
-
-        # Elimina registros sin bien
-        df_unidad = df_unidad.dropna(subset=["bien"])
-
-        # Extiende los registros del servicio, unidad y piso
-        df_unidad["unidadservicio_clinico"] = df_unidad["unidadservicio_clinico"].ffill()
-        df_unidad["ubicacion_unidad"] = df_unidad["ubicacion_unidad"].ffill()
-        df_unidad["piso"] = df_unidad["piso"].ffill()
-
-        dfs.append(df_unidad)
-
-    # Une todas las unidades
-    df = pd.concat(dfs)
-
-    # Llena los NaNs
-    df = df.fillna("")
-
-    # Limpia las columnas de texto
-    columnas_texto = df.drop(columns="piso").columns
-    df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
-
-    # Indica el tipo de bien
-    df["tipo_bien"] = "MOBILIARIO"
-
-    # Limpia las unidades
-    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
-
-    # Limpia la propiedad
-    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_MOBILIARIOS)
-
-    # Elimina columnas innecesarias
-    df = df.drop(columns="tipo")
-
-    return df
-
-
 def procesar_mobiliario_consolidado(ruta):
     # Lee archivo
     df = pd.read_excel(ruta)
@@ -315,12 +239,12 @@ def main(
     output_informaticos_nuevo = output_path / "df_procesada_informaticos.csv"
 
     # Lee y exporta diversos bienes
-    df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
+    # df_mobiliario = procesar_mobiliarios(ruta_mobiliarios)
     df_equipos = procesar_equipos_medicos(ruta_equipos)
     df_industriales_nuevos = procesar_equipos_industriales_nuevos(ruta_industriales_nuevo)
     df_informaticos_nuevos = procesar_equipos_informaticos_nuevos(ruta_informaticos_nuevo)
 
-    df_mobiliario.to_csv(output_mobiliarios, index=False)
+    # df_mobiliario.to_csv(output_mobiliarios, index=False)
     df_equipos.to_csv(output_equipos, index=False)
     df_industriales_nuevos.to_csv(output_industriales_nuevos, index=False)
     df_informaticos_nuevos.to_csv(output_informaticos_nuevo, index=False)
