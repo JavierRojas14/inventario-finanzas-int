@@ -64,6 +64,12 @@ CAMBIO_PROPIEDAD_INDUSTRIALES = {
     "DONACION": "INT (DONACION)",
 }
 
+CAMBIO_UNIDAD_INFORMATICO = {
+    "UTIM 3ERO NORTE": "UTIM 3 NORTE",
+    "UTIM 3RO NORTE": "UTIM 3 NORTE",
+    "UTIM NORTE": "UTIM 3 NORTE",
+}
+
 
 def procesar_mobiliario(ruta):
     # Define los archivos en la carpeta
@@ -252,6 +258,9 @@ def procesar_equipos_informaticos_nuevos(ruta):
 
     # Agrega el tipo de bien
     df["tipo_bien"] = "INFORMATICO"
+
+    # Cambia unidad de servicio
+    df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIO_UNIDAD_INFORMATICO)
 
     return df
 
