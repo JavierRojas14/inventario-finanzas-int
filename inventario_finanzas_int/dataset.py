@@ -187,7 +187,6 @@ def procesar_equipos_industriales_nuevos(ruta):
         columns={
             "n_inventario_definido_2025": "correlativo_antiguo",
             "tipo": "propiedad",
-            "observaciones": "observacion",
         }
     )
 
