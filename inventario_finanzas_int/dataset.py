@@ -69,9 +69,11 @@ CAMBIO_UNIDAD_INFORMATICO = {
 }
 
 CAMBIO_PROPIEDAD_MOBILIARIOS = {
-    "FUNCIONARIOS": "FUNCIONARIO",
-    "U DE CHILE": "U. DE CHILE",
-    "EMPRESE EXTERNA": "EMPRESA EXTERNA",
+    "FUNCIONARIOS": "PROPIEDAD DEL FUNCIONARIO",
+    "DONACION": "INT (DONACION)",
+    "UNIVERSIDAD DE CHILE": "PROPIEDAD DE U. DE CHILE",
+    "EMPRESA EXTERNA": "PROPIEDAD DE EMPRESA EXTERNA",
+    "U. ANDRES BELLO": "PROPIEDAD U. ANDRES BELLO",
 }
 
 
@@ -145,7 +147,7 @@ def procesar_mobiliario(ruta):
     df[columnas_texto] = df[columnas_texto].apply(fa.limpiar_columna_texto)
 
     # Renombra propiedades
-    # df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_MOBILIARIOS)
+    df["propiedad"] = df["propiedad"].replace(CAMBIO_PROPIEDAD_MOBILIARIOS)
 
     # Renombra unidades
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
