@@ -7,6 +7,8 @@ Ocupa las bases de etiquetas. Agrega 2 correlativo:
 
 - Todos los registros que tenian "FARMACIA HOSPITALIZADO" o "FARMACIA AMBULATORIA" como unidad/servicio, se les cambio la unidad a "UNIDAD DE APOYO FARMACIA" y la ubicacion dentro de la unidad se le concateno el texto "FARMACIA HOSPITALIZADO -" o "FARMACIA AMBULATORIA" segun el caso (Ej: OFICINA QUIMICOS > FARMACIA HOSPITALIZADO - OFICINA QUIMICOS)
 
+- Agrega los codigos de equipos de maquinaria en un nuevo archivo
+
 # Equipos Industriales
 
 - Todos los registros que tenian "FARMACIA HOSPITALIZADO" como unidad/servicio, se les cambio la unidad a "UNIDAD DE APOYO FARMACIA" y la ubicacion dentro de la unidad se le concateno el texto "FARMACIA HOSPITALIZADO -" (Ej: OFICINA QUIMICOS > FARMACIA HOSPITALIZADO - OFICINA QUIMICOS)
