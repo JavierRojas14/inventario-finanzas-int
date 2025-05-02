@@ -17,7 +17,7 @@ Ocupa las bases de etiquetas. Agrega 2 correlativo:
 
 # Informaticos
 
-- Todos los registros que tenian "INMUNOLOGIA" o "MICROBIOLOGIA" o "QUIMICA" o "SALA DE INFORMES" o "TOMA DE MUESTRA" como unidad/servicio, se les cambio la unidad a "LABORATORIO" y la ubicacion dentro de la unidad se le concateno el texto previo en la unidad.
+- Todos los registros que tenian "INMUNOLOGIA" o "MICROBIOLOGIA" o "QUIMICA" o "SALA DE INFORMES" o "TOMA DE MUESTRA" o "TUBERCULOSIS" como unidad/servicio, se les cambio la unidad a "LABORATORIO" y la ubicacion dentro de la unidad se le concateno el texto previo en la unidad.
 
 - Todos los registros que tenian "FARMACIA HOSPITALIZADO" como unidad/servicio, se les cambio la unidad a "UNIDAD DE APOYO FARMACIA" y la ubicacion dentro de la unidad se le concateno el texto "FARMACIA HOSPITALIZADO -" (Ej: OFICINA QUIMICOS > FARMACIA HOSPITALIZADO - OFICINA QUIMICOS)
 
