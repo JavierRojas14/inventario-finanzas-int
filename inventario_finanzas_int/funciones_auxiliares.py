@@ -97,3 +97,48 @@ def guardar_dataframe_como_tabla_excel(
     wb.save(ruta_archivo)
 
     print(f"✅ Archivo guardado exitosamente en: {ruta_archivo}")
+
+
+def asignar_correlativos(
+    df, correlativo_inicial, glosas_con_correlativos, columna_salida="correlativo_2025"
+):
+    """
+    Asigna correlativos secuenciales a los registros cuyo valor en la columna 'propiedad'
+    esté presente en `glosas_con_correlativos`.
+
+    Parámetros:
+    - df: DataFrame con los datos.
+    - correlativo_inicial: número entero desde el cual se empezarán a asignar los correlativos.
+    - glosas_con_correlativos: lista de valores que indican las filas a las que se les debe asignar
+    correlativo.
+    - columna_salida: nombre de la columna donde se asignarán los correlativos. Por defecto:
+    'correlativo_2025'.
+
+    Retorna:
+    - df_copy: copia del DataFrame con la columna de correlativos asignada.
+    - ultimo_correlativo: último correlativo numérico asignado.
+    """
+    df_copy = df.copy()
+
+    # Identifica las filas a las que se asignará correlativo
+    mask = df_copy["propiedad"].isin(glosas_con_correlativos)
+    df_filtrado = df_copy[mask]
+
+    # Cantidad de registros a asignar
+    cantidad = len(df_filtrado)
+
+    # Genera correlativos
+    correlativos = [f"2025-{i}" for i in range(correlativo_inicial, correlativo_inicial + cantidad)]
+
+    # Asigna correlativos
+    df_copy.loc[mask, columna_salida] = correlativos
+
+    # Reemplaza "nan" como string por np.nan (por si acaso)
+    df_copy[columna_salida] = df_copy[columna_salida].replace("nan", np.nan)
+
+    # Calcula el último correlativo asignado
+    ultimo_correlativo = (
+        correlativo_inicial + cantidad - 1 if cantidad > 0 else correlativo_inicial - 1
+    )
+
+    return df_copy, ultimo_correlativo
