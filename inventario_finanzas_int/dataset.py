@@ -104,6 +104,8 @@ CAMBIO_PROPIEDAD_INFORMATICOS = {
     "EQUIPOS MEDICOS": "INT",
 }
 
+CAMBIO_TIPO_DE_BIEN_MOBILIARIOS = {"MAQUINARIA Y EQUIPO PARA LA PRODUCCION": "EQUIPO MEDICO"}
+
 
 def procesar_mobiliario(ruta):
     # Define los archivos en la carpeta
@@ -163,6 +165,9 @@ def procesar_mobiliario(ruta):
 
     # Renombra unidades
     df["unidadservicio_clinico"] = df["unidadservicio_clinico"].replace(CAMBIOS_UNIDAD_MOBILIARIOS)
+
+    # Renombra tipo de bien
+    df["tipo_bien"] = df["tipo_bien"].replace(CAMBIO_TIPO_DE_BIEN_MOBILIARIOS)
 
     return df
 
